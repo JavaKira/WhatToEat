@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -17,6 +18,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
+    private boolean isProducts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +47,25 @@ public class MainActivity extends AppCompatActivity {
             else
                 setProducts();
         });
+
+        binding.floatingActionButton.setOnClickListener(view -> {
+            Intent intent = new Intent(this, isProducts ? ActivityAddProduct.class : ActivityAddDishes.class);
+            startActivity(intent);
+        });
+
+
+        setProducts();
     }
 
     private void setProducts() {
         binding.dishes.setVisibility(View.GONE);
         binding.products.setVisibility(View.VISIBLE);
+        isProducts = true;
     }
 
     private void setDishes() {
         binding.dishes.setVisibility(View.VISIBLE);
         binding.products.setVisibility(View.GONE);
+        isProducts = false;
     }
 }
