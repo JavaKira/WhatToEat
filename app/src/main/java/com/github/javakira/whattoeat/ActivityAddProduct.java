@@ -17,6 +17,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Date;
+import java.util.Optional;
 
 public class ActivityAddProduct extends AppCompatActivity {
     private ActivityAddProductBinding binding;
@@ -36,7 +37,7 @@ public class ActivityAddProduct extends AppCompatActivity {
         binding = ActivityAddProductBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        launcher = registerForActivityResult(new ActivityResultContract<String, ProductType>() {
+        launcher = registerForActivityResult(new ActivityResultContract<String, Optional<ProductType>>() {
             @NonNull
             @Override
             public Intent createIntent(@NonNull Context context, String s) {
@@ -44,11 +45,15 @@ public class ActivityAddProduct extends AppCompatActivity {
             }
 
             @Override
-            public ProductType parseResult(int i, @Nullable Intent intent) {
+            public Optional<ProductType> parseResult(int i, @Nullable Intent intent) {
                 //ToDo temp
-                return new ProductType( intent.getStringExtra("productType"), new Date());
+                if (intent != null)
+                    return Optional.of(new ProductType( intent.getStringExtra("productType"), new Date()));
+                else {
+                    return Optional.empty();
+                }
             }
-        }, this::updateProductType);
+        }, result -> result.ifPresent(type -> productType = type));
 
         binding.amountAdd.setOnClickListener(view -> {
             count++;
