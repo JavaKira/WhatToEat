@@ -53,7 +53,6 @@ public class FileIO {
         Properties properties = props(context);
         int count = Integer.parseInt(properties.getProperty("productCount", "0"));
         List<Eat> products = new ArrayList<>(count);
-        Log.i("whattoeat", properties.toString());
         for (int i = 0; i < count; i++) {
             products.add(new Eat(properties.getProperty("product" + i + "Title"), new Date(), Integer.parseInt(properties.getProperty("product" + i + "Count"))));
         }
@@ -67,6 +66,24 @@ public class FileIO {
         properties.setProperty("productCount", String.valueOf(index + 1));
         properties.setProperty("product" + index + "Title", eat.title);
         properties.setProperty("product" + index + "Count", String.valueOf(eat.count));
+        storeProps(properties, context);
+    }
+
+    public static void remProduct(Eat eat, Context context) {
+        Properties properties = props(context);
+        List<Eat> products = getProducts(context);
+        for (int i = 0; i < products.size(); i++) {
+            properties.remove("product" + i + "Title");
+            properties.remove("product" + i + "Count");
+        }
+
+        products.remove(eat);
+        properties.setProperty("productCount", String.valueOf(products.size()));
+        for (int i = 0; i < products.size(); i++) {
+            properties.setProperty("product" + i + "Title", products.get(i).title);
+            properties.setProperty("product" + i + "Count", String.valueOf(products.get(i).count));
+        }
+
         storeProps(properties, context);
     }
 }
