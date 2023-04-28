@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.javakira.whattoeat.databinding.ActivityAddProductBinding;
 import com.github.javakira.whattoeat.model.Eat;
 import com.github.javakira.whattoeat.model.ProductType;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Date;
 
@@ -68,6 +70,8 @@ public class ActivityAddProduct extends AppCompatActivity {
             if (productType != null) {
                 FileIO.addProduct(new Eat(productType.title, new Date(), count), binding.getRoot().getContext());
                 finish();
+            } else {
+                Snackbar.make(view, "Вы не выбрали тип продукта!", BaseTransientBottomBar.LENGTH_LONG).show();
             }
         });
 
