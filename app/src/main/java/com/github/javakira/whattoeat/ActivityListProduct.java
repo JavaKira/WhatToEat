@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.github.javakira.whattoeat.databinding.ActivityListProductBinding;
+
 public class ActivityListProduct extends AppCompatActivity {
+    private ActivityListProductBinding binding;
 
     public ActivityListProduct() {
     }
@@ -12,6 +15,8 @@ public class ActivityListProduct extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_product);
+
+        binding = ActivityListProductBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
     }
 }
