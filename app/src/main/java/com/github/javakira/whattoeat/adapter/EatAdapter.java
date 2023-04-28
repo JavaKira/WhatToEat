@@ -12,7 +12,7 @@ import com.github.javakira.whattoeat.model.Eat;
 
 import java.util.List;
 
-public class EatAdapter extends ModelAdapter<Eat> {
+public class EatAdapter extends ModelAdapter<Eat, EatAdapter.EatViewHolder> {
 
     public EatAdapter(Context context, List<Eat> eats) {
         super(context, eats);
@@ -20,7 +20,7 @@ public class EatAdapter extends ModelAdapter<Eat> {
 
     @NonNull
     @Override
-    public ModelViewHolder<Eat> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public EatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemCardBinding binding = ItemCardBinding.inflate(LayoutInflater.from(context), parent, false);
         return new EatViewHolder(binding.getRoot(), binding);
     }

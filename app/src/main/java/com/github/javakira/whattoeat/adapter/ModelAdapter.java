@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public abstract class ModelAdapter<T> extends RecyclerView.Adapter<ModelAdapter.ModelViewHolder<T>>{
+public abstract class ModelAdapter<T, P extends ModelAdapter.ModelViewHolder<T>> extends RecyclerView.Adapter<P>{
     protected final Context context;
     protected final List<T> models;
 
@@ -23,7 +23,7 @@ public abstract class ModelAdapter<T> extends RecyclerView.Adapter<ModelAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ModelViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull P holder, int position) {
         holder.visit(models.get(position));
     }
 
