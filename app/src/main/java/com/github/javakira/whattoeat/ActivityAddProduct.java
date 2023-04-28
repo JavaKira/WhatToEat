@@ -3,9 +3,7 @@ package com.github.javakira.whattoeat;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
@@ -13,12 +11,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.javakira.whattoeat.databinding.ActivityAddProductBinding;
+import com.github.javakira.whattoeat.model.ProductType;
+
+import java.util.Date;
 
 public class ActivityAddProduct extends AppCompatActivity {
     private ActivityAddProductBinding binding;
 
     private ActivityResultLauncher<String> launcher;
 
+    private ProductType productType;
     private int count = 1;
 
     public ActivityAddProduct() {
@@ -31,7 +33,7 @@ public class ActivityAddProduct extends AppCompatActivity {
         binding = ActivityAddProductBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        launcher = registerForActivityResult(new ActivityResultContract<String, String>() {
+        launcher = registerForActivityResult(new ActivityResultContract<String, ProductType>() {
             @NonNull
             @Override
             public Intent createIntent(@NonNull Context context, String s) {
@@ -39,12 +41,11 @@ public class ActivityAddProduct extends AppCompatActivity {
             }
 
             @Override
-            public String parseResult(int i, @Nullable Intent intent) {
-                return intent.getStringExtra("productType");
+            public ProductType parseResult(int i, @Nullable Intent intent) {
+                //ToDo temp
+                return new ProductType( intent.getStringExtra("productType"), new Date());
             }
-        }, result -> {
-            binding.textView9.setText(result);
-        });
+        }, this::updateProductType);
 
         binding.amountAdd.setOnClickListener(view -> {
             count++;
@@ -62,7 +63,17 @@ public class ActivityAddProduct extends AppCompatActivity {
             launcher.launch("");
         });
 
+        binding.endButton.setOnClickListener(view -> {
+            if (productType != null)
+                finish();
+        });
+
         updateCount();
+    }
+
+    private void updateProductType(ProductType productType) {
+        this.productType = productType;
+        binding.textView9.setText(productType.title);
     }
 
     private void updateCount() {
