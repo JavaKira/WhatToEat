@@ -8,11 +8,26 @@ import com.github.javakira.whattoeat.model.Eat;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
 public class FileIO {
     private static final String propsName = "props.properties";
+
+    private static final List<Runnable> propsStoreListeners = new LinkedList<>();
+
+    public static void addPropsStoreListener(Runnable runnable) {
+        propsStoreListeners.add(runnable);
+    }
+
+    public static void removePropsStoreListener(Runnable runnable) {
+        propsStoreListeners.remove(runnable);
+    }
+
+    private static void invokePropsStoreListeners() {
+        propsStoreListeners.forEach(Runnable::run);
+    }
 
     private static Properties props(Context context) {
         Properties properties = new Properties();
@@ -28,6 +43,7 @@ public class FileIO {
     private static void storeProps(Properties properties, Context context) {
         try {
             properties.store(context.openFileOutput(propsName, 0), "");
+            invokePropsStoreListeners();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

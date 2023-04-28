@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private boolean isProducts;
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,11 +30,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         List<Eat> productsList = FileIO.getProducts(binding.getRoot().getContext());
-        productsList.add(new Eat("Яица", new Date(), 10));
         EatAdapter products = new EatAdapter(binding.getRoot().getContext(), productsList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(binding.getRoot().getContext(), RecyclerView.VERTICAL, false);
         binding.products.setLayoutManager(layoutManager);
         binding.products.setAdapter(products);
+
+        FileIO.addPropsStoreListener(() -> {
+            productsList.clear();
+            productsList.addAll(FileIO.getProducts(binding.getRoot().getContext()));
+            products.notifyDataSetChanged();
+        });
 
         List<Eat> dishesList = new ArrayList<>();
         dishesList.add(new Eat("Омлет", new Date(), 1));
