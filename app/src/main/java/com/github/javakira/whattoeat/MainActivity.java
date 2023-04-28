@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        List<Eat> productsList = new ArrayList<>();
+        List<Eat> productsList = FileIO.getProducts(binding.getRoot().getContext());
         productsList.add(new Eat("Яица", new Date(), 10));
         EatAdapter products = new EatAdapter(binding.getRoot().getContext(), productsList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(binding.getRoot().getContext(), RecyclerView.VERTICAL, false);

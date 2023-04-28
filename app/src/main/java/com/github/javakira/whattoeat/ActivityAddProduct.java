@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.javakira.whattoeat.databinding.ActivityAddProductBinding;
+import com.github.javakira.whattoeat.model.Eat;
 import com.github.javakira.whattoeat.model.ProductType;
 
 import java.util.Date;
@@ -64,8 +65,10 @@ public class ActivityAddProduct extends AppCompatActivity {
         });
 
         binding.endButton.setOnClickListener(view -> {
-            if (productType != null)
+            if (productType != null) {
+                FileIO.addProduct(new Eat(productType.title, new Date(), count), binding.getRoot().getContext());
                 finish();
+            }
         });
 
         updateCount();
