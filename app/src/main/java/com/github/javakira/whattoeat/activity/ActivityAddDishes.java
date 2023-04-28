@@ -1,4 +1,4 @@
-package com.github.javakira.whattoeat;
+package com.github.javakira.whattoeat.activity;
 
 import android.os.Bundle;
 

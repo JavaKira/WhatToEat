@@ -1,4 +1,4 @@
-package com.github.javakira.whattoeat;
+package com.github.javakira.whattoeat.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.javakira.whattoeat.FileIO;
 import com.github.javakira.whattoeat.databinding.ActivityAddProductBinding;
 import com.github.javakira.whattoeat.model.Eat;
 import com.github.javakira.whattoeat.model.ProductType;

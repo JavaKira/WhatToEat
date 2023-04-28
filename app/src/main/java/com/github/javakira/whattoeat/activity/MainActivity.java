@@ -1,4 +1,4 @@
-package com.github.javakira.whattoeat;
+package com.github.javakira.whattoeat.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.github.javakira.whattoeat.FileIO;
 import com.github.javakira.whattoeat.adapter.EatAdapter;
 import com.github.javakira.whattoeat.databinding.ActivityMainBinding;
 import com.github.javakira.whattoeat.model.Eat;
