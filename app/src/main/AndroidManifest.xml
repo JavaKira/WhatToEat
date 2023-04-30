@@ -13,6 +13,9 @@
         android:theme="@style/Theme.WhatToEat"
         tools:targetApi="31">
         <activity
+            android:name=".activity.ActivityAddTypeProduct"
+            android:exported="false" />
+        <activity
             android:name=".activity.ActivityListProduct"
             android:exported="false" />
         <activity

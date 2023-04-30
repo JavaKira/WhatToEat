@@ -41,5 +41,10 @@ public class ActivityListProduct extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(binding.getRoot().getContext(), RecyclerView.VERTICAL, false);
         binding.products.setLayoutManager(layoutManager);
         binding.products.setAdapter(products);
+
+        binding.floatingActionButton.setOnClickListener(view -> {
+            Intent intent = new Intent(this, ActivityAddTypeProduct.class);
+            startActivity(intent);
+        });
     }
 }
