@@ -1,11 +1,13 @@
 package com.github.javakira.whattoeat;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.github.javakira.whattoeat.model.Eat;
+import com.github.javakira.whattoeat.model.containers.ProductTypes;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -14,6 +16,7 @@ import java.util.Properties;
 
 public class FileIO {
     private static final String propsName = "props.properties";
+    private static final String productTypeName = "productTypes";
 
     private static final List<Runnable> propsStoreListeners = new LinkedList<>();
 
@@ -44,6 +47,31 @@ public class FileIO {
         try {
             properties.store(context.openFileOutput(propsName, 0), "");
             invokePropsStoreListeners();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static ProductTypes productTypes(Context context) {
+        ProductTypes productTypes;
+        try {
+            ObjectInputStream objectInputStream = new ObjectInputStream(context.openFileInput(productTypeName));
+            productTypes = (ProductTypes) objectInputStream.readObject();
+            objectInputStream.close();
+        } catch (IOException e) {
+            productTypes = new ProductTypes();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        return productTypes;
+    }
+
+    public static void store(ProductTypes productTypes, Context context) {
+        try {
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(context.openFileOutput(productTypeName, 0));
+            objectOutputStream.writeObject(productTypes);
+            objectOutputStream.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

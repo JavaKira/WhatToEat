@@ -1,8 +1,9 @@
 package com.github.javakira.whattoeat.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ProductType {
+public class ProductType implements Serializable {
     public final String title;
     public final Date spoil;
 
