@@ -77,6 +77,12 @@ public class FileIO {
         store(products, context);
     }
 
+    public static void changeProductTypes(Context context, Consumer<ProductTypes> consumer) {
+        ProductTypes productTypes = productTypes(context);
+        consumer.accept(productTypes);
+        store(productTypes, context);
+    }
+
     public static void store(ProductTypes productTypes, Context context) {
         serialize(productTypes, productTypeName, context);
     }

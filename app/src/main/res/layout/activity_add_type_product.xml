@@ -39,7 +39,7 @@
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:inputType="text"
-        android:text="Название продукта"
+        android:text=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activityTitle" />
