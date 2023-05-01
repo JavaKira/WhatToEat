@@ -30,11 +30,11 @@ public class EatAdapter extends ModelAdapter<Eat, EatAdapter.EatViewHolder> {
     public void onBindViewHolder(@NonNull EatViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
         holder.binding.getRoot().setOnClickListener(view -> {
-            Eat product = models.get(position);
-            FileIO.remProduct(product, holder.binding.getRoot().getContext());
-            if (product.count > 1)
-                FileIO.addProduct(new Eat(product.title, product.spoil, product.count - 1),
-                        holder.binding.getRoot().getContext());
+            //Eat product = models.get(position);
+            //FileIO.remProduct(product, holder.binding.getRoot().getContext());
+            //if (product.count > 1)
+            //    FileIO.addProduct(new Eat(product.title, product.spoil, product.count - 1),
+            //            holder.binding.getRoot().getContext());
         });
     }
 

@@ -3,6 +3,7 @@ package com.github.javakira.whattoeat;
 import android.content.Context;
 
 import com.github.javakira.whattoeat.model.Eat;
+import com.github.javakira.whattoeat.model.Product;
 import com.github.javakira.whattoeat.model.containers.ProductTypes;
 
 import java.io.IOException;
@@ -77,18 +78,18 @@ public class FileIO {
         }
     }
 
-    public static List<Eat> getProducts(Context context) {
+    public static List<Product> getProducts(Context context) {
         Properties properties = props(context);
         int count = Integer.parseInt(properties.getProperty("productCount", "0"));
-        List<Eat> products = new ArrayList<>(count);
+        List<Product> products = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            products.add(new Eat(properties.getProperty("product" + i + "Title"), new Date(), Integer.parseInt(properties.getProperty("product" + i + "Count"))));
+            products.add(new Product(properties.getProperty("product" + i + "Title"), new Date(), Integer.parseInt(properties.getProperty("product" + i + "Count"))));
         }
 
         return products;
     }
 
-    public static void addProduct(Eat eat, Context context) {
+    public static void addProduct(Product eat, Context context) {
         Properties properties = props(context);
         int index = Integer.parseInt(properties.getProperty("productCount", "0"));
         properties.setProperty("productCount", String.valueOf(index + 1));
@@ -97,9 +98,9 @@ public class FileIO {
         storeProps(properties, context);
     }
 
-    public static void remProduct(Eat eat, Context context) {
+    public static void remProduct(Product eat, Context context) {
         Properties properties = props(context);
-        List<Eat> products = getProducts(context);
+        List<Product> products = getProducts(context);
         for (int i = 0; i < products.size(); i++) {
             properties.remove("product" + i + "Title");
             properties.remove("product" + i + "Count");

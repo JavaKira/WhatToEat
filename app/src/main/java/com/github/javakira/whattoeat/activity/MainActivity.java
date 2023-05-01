@@ -11,8 +11,10 @@ import android.view.View;
 
 import com.github.javakira.whattoeat.FileIO;
 import com.github.javakira.whattoeat.adapter.EatAdapter;
+import com.github.javakira.whattoeat.adapter.ProductAdapter;
 import com.github.javakira.whattoeat.databinding.ActivityMainBinding;
 import com.github.javakira.whattoeat.model.Eat;
+import com.github.javakira.whattoeat.model.Product;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        List<Eat> productsList = FileIO.getProducts(binding.getRoot().getContext());
-        EatAdapter products = new EatAdapter(binding.getRoot().getContext(), productsList);
+        List<Product> productsList = FileIO.getProducts(binding.getRoot().getContext());
+        ProductAdapter products = new ProductAdapter(binding.getRoot().getContext(), productsList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(binding.getRoot().getContext(), RecyclerView.VERTICAL, false);
         binding.products.setLayoutManager(layoutManager);
         binding.products.setAdapter(products);
