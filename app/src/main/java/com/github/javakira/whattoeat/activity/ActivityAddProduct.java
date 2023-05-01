@@ -15,6 +15,7 @@ import com.github.javakira.whattoeat.databinding.ActivityAddProductBinding;
 import com.github.javakira.whattoeat.model.Eat;
 import com.github.javakira.whattoeat.model.Product;
 import com.github.javakira.whattoeat.model.ProductType;
+import com.github.javakira.whattoeat.model.containers.Products;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -75,7 +76,8 @@ public class ActivityAddProduct extends AppCompatActivity {
 
         binding.endButton.setOnClickListener(view -> {
             if (productType != null) {
-                FileIO.addProduct(new Product(productType.title, new Date(), count), binding.getRoot().getContext());
+                FileIO.changeProducts(binding.getRoot().getContext(),
+                        products -> products.list().add(new Product(productType.title, new Date(), count)));
                 finish();
             } else {
                 Snackbar.make(view, "Вы не выбрали тип продукта!", BaseTransientBottomBar.LENGTH_LONG).show();

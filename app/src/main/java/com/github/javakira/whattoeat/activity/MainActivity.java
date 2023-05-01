@@ -15,6 +15,7 @@ import com.github.javakira.whattoeat.adapter.ProductAdapter;
 import com.github.javakira.whattoeat.databinding.ActivityMainBinding;
 import com.github.javakira.whattoeat.model.Eat;
 import com.github.javakira.whattoeat.model.Product;
+import com.github.javakira.whattoeat.model.containers.Products;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,16 +33,16 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        List<Product> productsList = FileIO.getProducts(binding.getRoot().getContext());
-        ProductAdapter products = new ProductAdapter(binding.getRoot().getContext(), productsList);
+        Products products = FileIO.products(binding.getRoot().getContext());
+        ProductAdapter productsAdapter = new ProductAdapter(binding.getRoot().getContext(), products.list());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(binding.getRoot().getContext(), RecyclerView.VERTICAL, false);
         binding.products.setLayoutManager(layoutManager);
-        binding.products.setAdapter(products);
+        binding.products.setAdapter(productsAdapter);
 
-        FileIO.addPropsStoreListener(() -> {
-            productsList.clear();
-            productsList.addAll(FileIO.getProducts(binding.getRoot().getContext()));
-            products.notifyDataSetChanged();
+        FileIO.addProductStoreListener(() -> {
+            products.list().clear();
+            products.list().addAll(FileIO.products(binding.getRoot().getContext()).list());
+            productsAdapter.notifyDataSetChanged();
         });
 
         List<Eat> dishesList = new ArrayList<>();

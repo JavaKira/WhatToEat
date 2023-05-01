@@ -32,10 +32,11 @@ public class ProductAdapter extends ModelAdapter<Product, ProductAdapter.Product
         super.onBindViewHolder(holder, position);
         holder.binding.getRoot().setOnClickListener(view -> {
             Product product = models.get(position);
-            FileIO.remProduct(product, holder.binding.getRoot().getContext());
+            FileIO.changeProducts(holder.binding.getRoot().getContext(),
+                    products -> products.list().remove(product));
             if (product.count > 1)
-                FileIO.addProduct(new Product(product.title, product.spoil, product.count - 1),
-                        holder.binding.getRoot().getContext());
+                FileIO.changeProducts(holder.binding.getRoot().getContext(),
+                        products -> products.list().add(new Product(product.title, product.spoil, product.count - 1)));
         });
     }
 

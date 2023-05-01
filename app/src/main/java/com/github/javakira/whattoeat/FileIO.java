@@ -2,117 +2,87 @@ package com.github.javakira.whattoeat;
 
 import android.content.Context;
 
-import com.github.javakira.whattoeat.model.Eat;
 import com.github.javakira.whattoeat.model.Product;
+import com.github.javakira.whattoeat.model.ProductType;
 import com.github.javakira.whattoeat.model.containers.ProductTypes;
+import com.github.javakira.whattoeat.model.containers.Products;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
+import java.util.function.Consumer;
 
 public class FileIO {
-    private static final String propsName = "props.properties";
+    private static final String productsName = "products";
     private static final String productTypeName = "productTypes";
 
-    private static final List<Runnable> propsStoreListeners = new LinkedList<>();
+    private static final List<Runnable> productStoreListener = new LinkedList<>();
 
-    public static void addPropsStoreListener(Runnable runnable) {
-        propsStoreListeners.add(runnable);
+    public static void addProductStoreListener(Runnable runnable) {
+        productStoreListener.add(runnable);
     }
 
-    public static void removePropsStoreListener(Runnable runnable) {
-        propsStoreListeners.remove(runnable);
+    public static void removeProductStoreListener(Runnable runnable) {
+        productStoreListener.remove(runnable);
     }
 
-    private static void invokePropsStoreListeners() {
-        propsStoreListeners.forEach(Runnable::run);
+    private static void invokeProductStoreListeners() {
+        productStoreListener.forEach(Runnable::run);
     }
 
-    private static Properties props(Context context) {
-        Properties properties = new Properties();
+    private static void serialize(Object o, String filename, Context context) {
         try {
-            properties.load(context.openFileInput(propsName));
-        } catch (IOException ignored) {
-
-        }
-
-        return properties;
-    }
-
-    private static void storeProps(Properties properties, Context context) {
-        try {
-            properties.store(context.openFileOutput(propsName, 0), "");
-            invokePropsStoreListeners();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static ProductTypes productTypes(Context context) {
-        ProductTypes productTypes;
-        try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(context.openFileInput(productTypeName));
-            productTypes = (ProductTypes) objectInputStream.readObject();
-            objectInputStream.close();
-        } catch (IOException e) {
-            productTypes = new ProductTypes();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        return productTypes;
-    }
-
-    public static void store(ProductTypes productTypes, Context context) {
-        try {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(context.openFileOutput(productTypeName, 0));
-            objectOutputStream.writeObject(productTypes);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(context.openFileOutput(filename, 0));
+            objectOutputStream.writeObject(o);
             objectOutputStream.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static List<Product> getProducts(Context context) {
-        Properties properties = props(context);
-        int count = Integer.parseInt(properties.getProperty("productCount", "0"));
-        List<Product> products = new ArrayList<>(count);
-        for (int i = 0; i < count; i++) {
-            products.add(new Product(properties.getProperty("product" + i + "Title"), new Date(), Integer.parseInt(properties.getProperty("product" + i + "Count"))));
+    private static <T> T deserialize(String filename, Context context) {
+        T object = null;
+        try {
+            ObjectInputStream objectInputStream = new ObjectInputStream(context.openFileInput(filename));
+            object = (T) objectInputStream.readObject();
+            objectInputStream.close();
+        } catch (Exception ignored) {
+
         }
+
+        return object;
+    }
+
+    public static ProductTypes productTypes(Context context) {
+        ProductTypes productTypes = deserialize(productTypeName, context);
+        if (productTypes == null)
+            productTypes = new ProductTypes();
+
+        return productTypes;
+    }
+
+    public static Products products(Context context) {
+        Products products = deserialize(productsName, context);
+        if (products == null)
+            products = new Products();
 
         return products;
     }
 
-    public static void addProduct(Product eat, Context context) {
-        Properties properties = props(context);
-        int index = Integer.parseInt(properties.getProperty("productCount", "0"));
-        properties.setProperty("productCount", String.valueOf(index + 1));
-        properties.setProperty("product" + index + "Title", eat.title);
-        properties.setProperty("product" + index + "Count", String.valueOf(eat.count));
-        storeProps(properties, context);
+    public static void changeProducts(Context context, Consumer<Products> consumer) {
+        Products products = products(context);
+        consumer.accept(products);
+        store(products, context);
     }
 
-    public static void remProduct(Product eat, Context context) {
-        Properties properties = props(context);
-        List<Product> products = getProducts(context);
-        for (int i = 0; i < products.size(); i++) {
-            properties.remove("product" + i + "Title");
-            properties.remove("product" + i + "Count");
-        }
+    public static void store(ProductTypes productTypes, Context context) {
+        serialize(productTypes, productTypeName, context);
+    }
 
-        products.remove(eat);
-        properties.setProperty("productCount", String.valueOf(products.size()));
-        for (int i = 0; i < products.size(); i++) {
-            properties.setProperty("product" + i + "Title", products.get(i).title);
-            properties.setProperty("product" + i + "Count", String.valueOf(products.get(i).count));
-        }
-
-        storeProps(properties, context);
+    public static void store(Products products, Context context) {
+        serialize(products, productsName, context);
+        invokeProductStoreListeners();
     }
 }
