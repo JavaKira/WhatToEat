@@ -12,6 +12,9 @@ import com.github.javakira.whattoeat.databinding.ItemCardBinding;
 import com.github.javakira.whattoeat.model.Eat;
 import com.github.javakira.whattoeat.model.Product;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class ProductAdapter extends ModelAdapter<Product, ProductAdapter.ProductViewHolder> {
@@ -52,7 +55,8 @@ public class ProductAdapter extends ModelAdapter<Product, ProductAdapter.Product
         @Override
         public void visit(Product product) {
             binding.textView3.setText(product.title);
-            binding.textView4.setText("испортится через" + product.spoil);
+            long diff = product.spoil.getTime() - new Date().getTime();
+            binding.textView4.setText("испортится через " + diff/(1000*3600*24) + " дней");
             binding.textView5.setText(product.count + " штук");
         }
     }
