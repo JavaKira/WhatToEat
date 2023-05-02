@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import com.github.javakira.whattoeat.FileIO;
 import com.github.javakira.whattoeat.databinding.ChooseProductBinding;
 import com.github.javakira.whattoeat.model.ProductType;
 
@@ -50,6 +51,11 @@ public class ProductTypeAdapter extends ModelAdapter<ProductType, ProductTypeAda
         @Override
         public void visit(ProductType model) {
             binding.textView3.setText(model.title);
+            binding.removeIcon.setOnClickListener(view -> {
+                FileIO.changeProductTypes(binding.getRoot().getContext(), productTypes -> {
+                    productTypes.list().remove(model);
+                });
+            });
         }
     }
 }

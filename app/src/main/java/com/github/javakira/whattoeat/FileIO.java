@@ -2,8 +2,6 @@ package com.github.javakira.whattoeat;
 
 import android.content.Context;
 
-import com.github.javakira.whattoeat.model.Product;
-import com.github.javakira.whattoeat.model.ProductType;
 import com.github.javakira.whattoeat.model.containers.ProductTypes;
 import com.github.javakira.whattoeat.model.containers.Products;
 
@@ -19,6 +17,7 @@ public class FileIO {
     private static final String productTypeName = "productTypes";
 
     private static final List<Runnable> productStoreListener = new LinkedList<>();
+    private static final List<Runnable> productTypeStoreListener = new LinkedList<>();
 
     public static void addProductStoreListener(Runnable runnable) {
         productStoreListener.add(runnable);
@@ -30,6 +29,18 @@ public class FileIO {
 
     private static void invokeProductStoreListeners() {
         productStoreListener.forEach(Runnable::run);
+    }
+
+    public static void addProductTypeStoreListener(Runnable runnable) {
+        productTypeStoreListener.add(runnable);
+    }
+
+    public static void removeProductTypeStoreListener(Runnable runnable) {
+        productTypeStoreListener.remove(runnable);
+    }
+
+    private static void invokeProductTypeStoreListeners() {
+        productTypeStoreListener.forEach(Runnable::run);
     }
 
     private static void serialize(Object o, String filename, Context context) {
@@ -85,6 +96,7 @@ public class FileIO {
 
     public static void store(ProductTypes productTypes, Context context) {
         serialize(productTypes, productTypeName, context);
+        invokeProductTypeStoreListeners();
     }
 
     public static void store(Products products, Context context) {

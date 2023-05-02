@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ public class ActivityListProduct extends AppCompatActivity {
     public ActivityListProduct() {
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,11 +40,16 @@ public class ActivityListProduct extends AppCompatActivity {
             setResult(RESULT_OK, data);
             finish();
         });
-        FileIO.store(productTypes, binding.getRoot().getContext());
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(binding.getRoot().getContext(), RecyclerView.VERTICAL, false);
         binding.products.setLayoutManager(layoutManager);
         binding.products.setAdapter(products);
+
+        FileIO.addProductTypeStoreListener(() -> {
+            productTypes.list().clear();
+            productTypes.list().addAll(FileIO.productTypes(binding.getRoot().getContext()).list());
+            products.notifyDataSetChanged();
+        });
 
         binding.floatingActionButton.setOnClickListener(view -> {
             Intent intent = new Intent(this, ActivityAddTypeProduct.class);
